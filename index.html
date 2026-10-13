@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planora — Aesthetic Habit & Mood Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(20, 26, 46, 0.7);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #f43f5e;
+      --primary-glow: rgba(244, 63, 94, 0.3);
+      --secondary: #8b5cf6;
+      --text-main: #f1f5f9;
+      --text-sub: #94a3b8;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(244, 63, 94, 0.12) 0%, transparent 45%),
+        radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 45%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #fff;
+      box-shadow: 0 0 20px var(--primary-glow);
+    }
+
+    .brand h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .brand h1 span {
+      color: var(--primary);
+    }
+
+    .date-badge {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      color: var(--text-sub);
+      backdrop-filter: blur(10px);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: 1.2fr 1fr;
+      }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Quote Box */
+    .quote-box {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.08), rgba(139, 92, 246, 0.08));
+      border: 1px dashed var(--card-border);
+      padding: 16px;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: center;
+      color: #cbd5e1;
+    }
+
+    /* Form & Inputs */
+    form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--card-border);
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--primary);
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), #e11d48);
+      color: #fff;
+      border: none;
+      padding: 0 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.1s ease, filter 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Todo List */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      padding: 12px 16px;
+      border-radius: 14px;
+      transition: background 0.2s;
+    }
+
+    .task-item.completed span {
+      text-decoration: line-through;
+      color: var(--text-sub);
+      opacity: 0.6;
+    }
+
+    .task-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .task-left input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      background: transparent;
+      border: none;
+      color: #f87171;
+      cursor: pointer;
+      font-size: 14px;
+      opacity: 0.7;
+    }
+    .delete-btn:hover { opacity: 1; }
+
+    /* Mood Selector */
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .mood-btn {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 14px 0;
+      font-size: 24px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .mood-btn:hover, .mood-btn.active {
+      background: rgba(244, 63, 94, 0.15);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .mood-history {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 14px;
+      padding: 14px;
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+      color: var(--text-sub);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">P</div>
+      <h1>Plan<span>ora</span></h1>
+    </div>
+    <div class="date-badge" id="currentDate">Loading...</div>
+  </header>
+
+  <div class="container">
+    <!-- Kolom Kiri: Daily Habit & To-Do -->
+    <div class="card">
+      <div class="card-title">
+        ✨ Daily Tasks & Habits
+        <span style="font-size: 12px; color: var(--text-sub);" id="taskCount">0/0 Done</span>
+      </div>
+
+      <div class="quote-box" id="quoteBox">
+        "Loading vibe quote..."
+      </div>
+
+      <form onsubmit="addTask(event)">
+        <input type="text" id="taskInput" placeholder="Tambah rencana hari ini..." required autocomplete="off">
+        <button type="submit" class="btn">Add</button>
+      </form>
+
+      <div class="task-list" id="taskList">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+
+    <!-- Kolom Kanan: Mood Check-in -->
+    <div class="card">
+      <div class="card-title">🧠 Daily Vibe Check-in</div>
+      <p style="font-size: 13px; color: var(--text-sub); margin-bottom: 14px;">Gimana energi dan perasaanmu hari ini?</p>
+
+      <div class="mood-grid">
+        <button class="mood-btn" onclick="setMood('🔥', 'Semangat membara, siap taklukkan dunia!')">🔥</button>
+        <button class="mood-btn" onclick="setMood('🎧', 'Chill, fokus ngerjain tugas sambil dengerin lofi.')">🎧</button>
+        <button class="mood-btn" onclick="setMood('💤', 'Lagi lowbat, butuh istirahat tenang.')">💤</button>
+        <button class="mood-btn" onclick="setMood('🎨', 'Kreatif lagi naik, mau explore ide baru.')">🎨</button>
+        <button class="mood-btn" onclick="setMood('☕', 'Santai sambil nikmatin kopi/minuman favorit.')">☕</button>
+      </div>
+
+      <div class="mood-history" id="moodStatus">
+        Belum memilih vibe hari ini. Pilih emoji di atas!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Tanggal Hari Ini
+    const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+    document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', options);
+
+    // Quotes Generator
+    const quotes = [
+      "\"Pelan-pelan asal konsisten, yang penting nggak burnout di tengah jalan.\"",
+      "\"Hari ini fokus bikin versi diri sendiri yang lebih baik dari kemarin, ya!\"",
+      "\"Energi positif ditarik oleh pikiran yang tenang. Have a good day!\"",
+      "\"Jangan lupa istirahat, valid kok kalau kamu butuh jeda sebentar.\""
+    ];
+    document.getElementById('quoteBox').innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+    // State Tasks
+    let tasks = JSON.parse(localStorage.getItem('planora_tasks')) || [
+      { text: "Kerjakan tugas sekolah / projek", completed: false },
+      { text: "Minum air putih yang cukup 💧", completed: true }
+    ];
+
+    function saveAndRender() {
+      localStorage.setItem('planora_tasks', JSON.stringify(tasks));
+      renderTasks();
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('taskList');
+      list.innerHTML = '';
+
+      let completedCount = 0;
+
+      tasks.forEach((task, index) => {
+        if (task.completed) completedCount++;
+
+        const item = document.createElement('div');
+        item.className = `task-item ${task.completed ? 'completed' : ''}`;
+        item.innerHTML = `
+          <div class="task-left" onclick="toggleTask(${index})">
+            <input type="checkbox" ${task.completed ? 'checked' : ''} onclick="event.stopPropagation(); toggleTask(${index})">
+            <span>${task.text}</span>
+          </div>
+          <button class="delete-btn" onclick="deleteTask(${index})">✕</button>
+        `;
+        list.appendChild(item);
+      });
+
+      document.getElementById('taskCount').innerText = `${completedCount}/${tasks.length} Done`;
+    }
+
+    function addTask(e) {
+      e.preventDefault();
+      const input = document.getElementById('taskInput');
+      if (!input.value.trim()) return;
+
+      tasks.push({ text: input.value.trim(), completed: false });
+      input.value = '';
+      saveAndRender();
+    }
+
+    function toggleTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      saveAndRender();
+    }
+
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      saveAndRender();
+    }
+
+    // Mood Manager
+    function setMood(emoji, desc) {
+      const status = document.getElementById('moodStatus');
+      status.innerHTML = `<strong style="font-size: 16px;">${emoji}</strong><br><span style="color: var(--text-main);">${desc}</span>`;
+      localStorage.setItem('planora_mood', status.innerHTML);
+    }
+
+    // Load saved mood
+    const savedMood = localStorage.getItem('planora_mood');
+    if (savedMood) {
+      document.getElementById('moodStatus').innerHTML = savedMood;
+    }
+
+    // Initial render
+    renderTasks();
+  </script>
+</body>
+</html>
